@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
 import khayaLogo from './logo-khayalethu.png';
-import AdminDashboard from './c';
 import AdminPage from './AdminPage'; // New import for AdminPage
 
 function ApplicationForm() {
