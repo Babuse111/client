@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "start": "echo Please run 'npm start' in client/client for frontend or client/server for backend.",
+    "frontend": "cd client && npm start",
+    "backend": "cd server && npm start"
+  },
   "devDependencies": {
     "nodemon": "^3.1.10"
   }
