@@ -1,10 +1,9 @@
-
-
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
 import khayaLogo from './logo-khayalethu.png';
 import AdminDashboard from './AdminDashboard';
+import AdminPage from './AdminPage'; // New import for AdminPage
 
 function ApplicationForm() {
   const [form, setForm] = useState({
@@ -165,7 +164,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin" element={<AdminPage />} /> {/* Updated to use AdminPage */}
         <Route path="/" element={<ApplicationForm />} />
       </Routes>
     </Router>
