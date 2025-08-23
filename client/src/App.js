@@ -1,7 +1,21 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css';
+import {
+  Box,
+  Fade,
+  Container,
+  Paper,
+  Typography,
+  Divider,
+  TextField,
+  MenuItem,
+  Button,
+  CircularProgress,
+  Alert
+} from '@mui/material';
 import khayaLogo from './logo-khayalethu.png';
+// import AdminPage from './AdminPage'; // Uncomment and update the path if you have an AdminPage component
+import './App.css';
 function ApplicationForm() {
   const [form, setForm] = useState({
     year: '',
