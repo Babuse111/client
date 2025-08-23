@@ -77,9 +77,30 @@ function ApplicationForm() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      position: 'relative',
+      overflow: 'hidden',
     }}>
+      {/* Blurred logo background */}
+      <img
+        src={khayaLogo}
+        alt="Khayalethu Logo Blurred"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '80vw',
+          maxWidth: 700,
+          minWidth: 320,
+          opacity: 0.10,
+          filter: 'blur(16px)',
+          zIndex: 0,
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}
+      />
       <Fade in timeout={900}>
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1 }}>
           <Paper elevation={6} sx={{ borderRadius: 5, p: { xs: 2, sm: 4 }, mt: 4, background: 'rgba(255,255,255,0.98)' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
               <img src={khayaLogo} alt="Khayalethu Logo" style={{ width: 120, marginBottom: 12, filter: 'drop-shadow(0 2px 8px #bfa14a66)' }} />
