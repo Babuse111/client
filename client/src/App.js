@@ -14,7 +14,7 @@ import {
   Alert
 } from '@mui/material';
 import khayaLogo from './logo-khayalethu.png';
-import AdminPage from '../admin/src/AdminDashboard'; // Adjust the path if your AdminPage is elsewhere
+import AdminPage from './AdminDashboard';
 import './App.css';
 function ApplicationForm() {
   const [form, setForm] = useState({
