@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import khayaLogo from './logo-khayalethu.png';
-import AdminPage from './AdminPage'; // New import for AdminPage
+import AdminPage from './AdminPage';
+import {
+  Container, Typography, TextField, Button, MenuItem, Box, Paper, CircularProgress, Alert, Divider, Fade
+} from '@mui/material';
 
 function ApplicationForm() {
   const [form, setForm] = useState({
@@ -67,94 +70,94 @@ function ApplicationForm() {
   };
 
   return (
-    <div className="App" style={{ background: '#fff', minHeight: '100vh', padding: 0 }}>
-      <div style={{ maxWidth: 500, margin: '32px auto 0 auto', background: '#fff', borderRadius: 12, boxShadow: '0 2px 16px #e0e0e0', padding: 32 }}>
-        <img src={khayaLogo} alt="Khayalethu Logo" style={{ width: 120, display: 'block', margin: '0 auto 16px auto' }} />
-        <h2 style={{ textAlign: 'center', color: '#444', marginBottom: 24 }}>Student Accommodation Application</h2>
-        {/* Admin Dashboard link removed for applicants */}
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
-          <label style={{ display: 'block', marginBottom: 8 }}>Year of Application
-            <input name="year" value={form.year} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
-          </label>
-          <label style={{ display: 'block', marginBottom: 8 }}>Head-to-shoulder Photo
-            <input type="file" name="photo" accept="image/*" onChange={handleFileChange} required style={{ width: '100%', marginTop: 4 }} />
-          </label>
-          <label style={{ display: 'block', marginBottom: 8 }}>ID Card 1st Side
-            <input type="file" name="id_card_1" accept="image/*" onChange={handleFileChange} required style={{ width: '100%', marginTop: 4 }} />
-          </label>
-          <label style={{ display: 'block', marginBottom: 8 }}>ID Card 2nd Side
-            <input type="file" name="id_card_2" accept="image/*" onChange={handleFileChange} required style={{ width: '100%', marginTop: 4 }} />
-          </label>
-          <label style={{ display: 'block', marginBottom: 8 }}>ID Number
-            <input name="id_number" value={form.id_number} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
-          </label>
-          <label style={{ display: 'block', marginBottom: 8 }}>Gender
-            <select name="gender" value={form.gender} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }}>
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-          </label>
-          <label style={{ display: 'block', marginBottom: 8 }}>Ethnicity
-            <select name="ethnicity" value={form.ethnicity} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }}>
-              <option value="">Select Ethnicity</option>
-              <option value="African">African</option>
-              <option value="Coloured">Coloured</option>
-              <option value="Indian">Indian</option>
-              <option value="White">White</option>
-              <option value="Other">Other</option>
-            </select>
-          </label>
-          <label style={{ display: 'block', marginBottom: 8 }}>Home Language
-            <select name="home_language" value={form.home_language} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }}>
-              <option value="">Select Language</option>
-              <option value="siSwati">siSwati</option>
-              <option value="isiZulu">isiZulu</option>
-              <option value="isiXhosa">isiXhosa</option>
-              <option value="Xitsonga">Xitsonga</option>
-              <option value="English">English</option>
-              <option value="Other">Other</option>
-            </select>
-          </label>
-          <label style={{ display: 'block', marginBottom: 8 }}>Full Names
-            <input name="full_names" value={form.full_names} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
-          </label>
-          <label style={{ display: 'block', marginBottom: 8 }}>Student Number
-            <input name="student_number" value={form.student_number} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
-          </label>
-          <label style={{ display: 'block', marginBottom: 8 }}>Institution
-            <input name="institution" value={form.institution} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
-          </label>
-          <label style={{ display: 'block', marginBottom: 8 }}>Email
-            <input type="email" name="email" value={form.email} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
-          </label>
-          <label style={{ display: 'block', marginBottom: 16 }}>Phone
-            <input name="phone" value={form.phone} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
-          </label>
-          <label style={{ display: 'block', marginBottom: 8 }}>Home Address
-            <input name="home_address" value={form.home_address} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
-          </label>
-          <fieldset style={{ border: '1px solid #ccc', borderRadius: 6, marginBottom: 16, padding: 12 }}>
-            <legend style={{ fontWeight: 'bold', color: '#bfa14a' }}>Guardian/Parent Information</legend>
-            <label style={{ display: 'block', marginBottom: 8 }}>Full Name
-              <input name="guardian_name" value={form.guardian_name} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
-            </label>
-            <label style={{ display: 'block', marginBottom: 8 }}>Relationship
-              <input name="guardian_relationship" value={form.guardian_relationship} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
-            </label>
-            <label style={{ display: 'block', marginBottom: 8 }}>Phone Number
-              <input name="guardian_phone" value={form.guardian_phone} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
-            </label>
-            <label style={{ display: 'block', marginBottom: 8 }}>Email Address
-              <input type="email" name="guardian_email" value={form.guardian_email} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
-            </label>
-          </fieldset>
-          <button type="submit" disabled={loading} style={{ width: '100%', padding: 10, background: '#bfa14a', color: '#fff', border: 'none', borderRadius: 6, fontWeight: 'bold', fontSize: 16, cursor: 'pointer' }}>{loading ? 'Submitting...' : 'Submit'}</button>
-        </form>
-        {message && <p style={{ textAlign: 'center', color: message.includes('success') ? 'green' : 'red', marginTop: 16 }}>{message}</p>}
-      </div>
-    </div>
+    <Box sx={{
+      minHeight: '100vh',
+      py: 4,
+      background: 'linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+      <Fade in timeout={900}>
+        <Container maxWidth="sm">
+          <Paper elevation={6} sx={{ borderRadius: 5, p: { xs: 2, sm: 4 }, mt: 4, background: 'rgba(255,255,255,0.98)' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
+              <img src={khayaLogo} alt="Khayalethu Logo" style={{ width: 120, marginBottom: 12, filter: 'drop-shadow(0 2px 8px #bfa14a66)' }} />
+              <Typography variant="h4" align="center" color="primary" fontWeight={800} gutterBottom letterSpacing={1}>
+                Student Accommodation Application
+              </Typography>
+              <Typography variant="subtitle1" align="center" color="text.secondary" sx={{ mb: 1 }}>
+                Secure your spot with a few easy steps
+              </Typography>
+            </Box>
+            <Divider sx={{ mb: 2 }}>
+              <Typography variant="overline" color="primary">Personal Details</Typography>
+            </Divider>
+            <Box component="form" onSubmit={handleSubmit} encType="multipart/form-data" sx={{ mt: 1 }}>
+              <TextField label="Year of Application" name="year" value={form.year} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="Full Names" name="full_names" value={form.full_names} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="ID Number" name="id_number" value={form.id_number} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="Student Number" name="student_number" value={form.student_number} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="Institution" name="institution" value={form.institution} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="Email" type="email" name="email" value={form.email} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="Phone" name="phone" value={form.phone} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="Home Address" name="home_address" value={form.home_address} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField select label="Gender" name="gender" value={form.gender} onChange={handleChange} required fullWidth margin="normal">
+                <MenuItem value="">Select Gender</MenuItem>
+                <MenuItem value="male">Male</MenuItem>
+                <MenuItem value="female">Female</MenuItem>
+                <MenuItem value="other">Other</MenuItem>
+              </TextField>
+              <TextField select label="Ethnicity" name="ethnicity" value={form.ethnicity} onChange={handleChange} required fullWidth margin="normal">
+                <MenuItem value="">Select Ethnicity</MenuItem>
+                <MenuItem value="African">African</MenuItem>
+                <MenuItem value="Coloured">Coloured</MenuItem>
+                <MenuItem value="Indian">Indian</MenuItem>
+                <MenuItem value="White">White</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
+              </TextField>
+              <TextField select label="Home Language" name="home_language" value={form.home_language} onChange={handleChange} required fullWidth margin="normal">
+                <MenuItem value="">Select Language</MenuItem>
+                <MenuItem value="siSwati">siSwati</MenuItem>
+                <MenuItem value="isiZulu">isiZulu</MenuItem>
+                <MenuItem value="isiXhosa">isiXhosa</MenuItem>
+                <MenuItem value="Xitsonga">Xitsonga</MenuItem>
+                <MenuItem value="English">English</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
+              </TextField>
+              <Divider sx={{ my: 3 }}>
+                <Typography variant="overline" color="primary">Uploads</Typography>
+              </Divider>
+              <Button variant="outlined" component="label" fullWidth sx={{ my: 1, borderStyle: 'dashed', borderColor: '#bfa14a' }}>
+                Upload Head-to-shoulder Photo
+                <input type="file" name="photo" accept="image/*" hidden onChange={handleFileChange} required />
+              </Button>
+              <Button variant="outlined" component="label" fullWidth sx={{ my: 1, borderStyle: 'dashed', borderColor: '#bfa14a' }}>
+                Upload ID Card 1st Side
+                <input type="file" name="id_card_1" accept="image/*" hidden onChange={handleFileChange} required />
+              </Button>
+              <Button variant="outlined" component="label" fullWidth sx={{ my: 1, borderStyle: 'dashed', borderColor: '#bfa14a' }}>
+                Upload ID Card 2nd Side
+                <input type="file" name="id_card_2" accept="image/*" hidden onChange={handleFileChange} required />
+              </Button>
+              <Divider sx={{ my: 3 }}>
+                <Typography variant="overline" color="primary">Guardian/Parent Info</Typography>
+              </Divider>
+              <TextField label="Full Name" name="guardian_name" value={form.guardian_name} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="Relationship" name="guardian_relationship" value={form.guardian_relationship} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="Phone Number" name="guardian_phone" value={form.guardian_phone} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="Email Address" type="email" name="guardian_email" value={form.guardian_email} onChange={handleChange} required fullWidth margin="normal" />
+              <Button type="submit" variant="contained" color="primary" fullWidth sx={{ py: 1.5, fontWeight: 700, fontSize: 16, mt: 3, boxShadow: 3 }} disabled={loading}>
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Submit Application'}
+              </Button>
+            </Box>
+            {message && (
+              <Fade in timeout={600}><div><Alert severity={message.includes('success') ? 'success' : 'error'} sx={{ mt: 2, textAlign: 'center' }}>{message}</Alert></div></Fade>
+            )}
+          </Paper>
+        </Container>
+      </Fade>
+    </Box>
   );
 }
 
