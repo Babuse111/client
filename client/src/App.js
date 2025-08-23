@@ -165,6 +165,7 @@ function ApplicationForm() {
           </Paper>
         </Container>
       </Fade>
+      </div>
     </Box>
   );
 }
