@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import khayaLogo from './logo-khayalethu.png';
+import './App.css';
 import AdminPage from './AdminPage';
 import {
   Container, Typography, TextField, Button, MenuItem, Box, Paper, CircularProgress, Alert, Divider, Fade
@@ -80,25 +81,10 @@ function ApplicationForm() {
       position: 'relative',
       overflow: 'hidden',
     }}>
-      {/* Blurred logo background */}
-      <img
-        src={khayaLogo}
-        alt="Khayalethu Logo Blurred"
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '80vw',
-          maxWidth: 700,
-          minWidth: 320,
-          opacity: 0.10,
-          filter: 'blur(16px)',
-          zIndex: 0,
-          pointerEvents: 'none',
-          userSelect: 'none',
-        }}
-      />
+      {/* Blurred logo background watermark */}
+      <div className="logo-bg-watermark">
+        <img src={khayaLogo} alt="Khayalethu Logo Watermark" />
+      </div>
       <Fade in timeout={900}>
         <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1 }}>
           <Paper elevation={6} sx={{ borderRadius: 5, p: { xs: 2, sm: 4 }, mt: 4, background: 'rgba(255,255,255,0.98)' }}>

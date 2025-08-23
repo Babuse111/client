@@ -1,3 +1,24 @@
+/* Blurred logo background watermark */
+.logo-bg-watermark {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  user-select: none;
+}
+.logo-bg-watermark img {
+  width: 70vw;
+  max-width: 800px;
+  min-width: 320px;
+  opacity: 0.13;
+  filter: blur(18px) grayscale(30%);
+}
 
 body {
   background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
