@@ -81,12 +81,13 @@ function ApplicationForm() {
       position: 'relative',
       overflow: 'hidden',
     }}>
-      {/* Blurred logo background watermark */}
-      <div className="logo-bg-watermark">
-        <img src={khayaLogo} alt="Khayalethu Logo Watermark" />
+      {/* Blurred logo background watermark - OUTSIDE the form container for true background effect */}
+      <div className="logo-bg-watermark" aria-hidden="true">
+        <img src={khayaLogo} alt="Khayalethu Logo Watermark" draggable="false" />
       </div>
-      <Fade in timeout={900}>
-        <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1 }}>
+      <div style={{ position: 'relative', zIndex: 1, width: '100%' }}>
+        <Fade in timeout={900}>
+          <Container maxWidth="sm">
           <Paper elevation={6} sx={{ borderRadius: 5, p: { xs: 2, sm: 4 }, mt: 4, background: 'rgba(255,255,255,0.98)' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
               <img src={khayaLogo} alt="Khayalethu Logo" style={{ width: 120, marginBottom: 12, filter: 'drop-shadow(0 2px 8px #bfa14a66)' }} />

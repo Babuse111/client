@@ -11,13 +11,16 @@
   justify-content: center;
   pointer-events: none;
   user-select: none;
+  overflow: hidden;
 }
 .logo-bg-watermark img {
   width: 70vw;
-  max-width: 800px;
+  max-width: 900px;
   min-width: 320px;
   opacity: 0.13;
-  filter: blur(18px) grayscale(30%);
+  filter: blur(22px) grayscale(30%);
+  pointer-events: none;
+  user-select: none;
 }
 
 body {
