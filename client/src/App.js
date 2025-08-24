@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import HomePage from './HomePage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import {
   Box,
@@ -240,11 +242,17 @@ function ApplicationForm() {
 
 
 function App() {
+  // HomePage navigation handler
+  const HomeWithNav = () => {
+    const navigate = useNavigate();
+    return <HomePage onApply={() => navigate('/apply')} />;
+  };
   return (
     <Router>
       <Routes>
-        <Route path="/admin" element={<AdminPage />} /> {/* Updated to use AdminPage */}
-        <Route path="/" element={<ApplicationForm />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/apply" element={<ApplicationForm />} />
+        <Route path="/" element={<HomeWithNav />} />
       </Routes>
     </Router>
   );

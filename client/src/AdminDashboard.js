@@ -1,4 +1,19 @@
+
 import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Paper,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+  Chip,
+  Divider
+} from '@mui/material';
 
 function AdminDashboard() {
   const [applications, setApplications] = useState([]);
@@ -33,73 +48,98 @@ function AdminDashboard() {
   };
 
   return (
-    <div style={{ maxWidth: 1200, margin: '32px auto', padding: 24 }}>
-      <h2 style={{ textAlign: 'center', color: '#bfa14a' }}>Admin Dashboard</h2>
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {!loading && !error && (
-        <table style={{ width: '100%', borderCollapse: 'collapse', background: '#fff', boxShadow: '0 2px 16px #e0e0e0' }}>
-          <thead>
-            <tr style={{ background: '#f5f5f5' }}>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Year</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Name</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Gender</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Ethnicity</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Home Language</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Email</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Institution</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Student #</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Phone</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Home Address</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Guardian</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Uploads</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Submitted</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Status</th>
-              <th style={{ padding: 8, border: '1px solid #ddd' }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {applications.map(app => (
-              <tr key={app.id}>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>{app.year}</td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>{app.full_names}</td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>{app.gender}</td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>{app.ethnicity}</td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>{app.home_language}</td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>{app.email}</td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>{app.institution}</td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>{app.student_number}</td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>{app.phone}</td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>{app.home_address}</td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>{app.guardian_name} ({app.guardian_relationship})<br/>{app.guardian_phone}<br/>{app.guardian_email}</td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>
-                  <a href={`/${app.photo}`} target="_blank" rel="noopener noreferrer">Photo</a><br/>
-                  <a href={`/${app.id_card_1}`} target="_blank" rel="noopener noreferrer">ID 1</a><br/>
-                  <a href={`/${app.id_card_2}`} target="_blank" rel="noopener noreferrer">ID 2</a>
-                </td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>{app.submitted_at ? new Date(app.submitted_at).toLocaleString() : ''}</td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>
-                  <span style={{
-                    color: app.status === 'accepted' ? 'green' : app.status === 'declined' ? 'red' : '#bfa14a',
-                    fontWeight: 'bold',
-                    textTransform: 'capitalize'
-                  }}>{app.status || 'pending'}</span>
-                </td>
-                <td style={{ padding: 8, border: '1px solid #ddd' }}>
-                  {app.status !== 'accepted' && (
-                    <button style={{ margin: '4px 2px', background: 'green', color: '#fff', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer' }} onClick={() => updateStatus(app.id, 'accepted')}>Accept</button>
-                  )}
-                  {app.status !== 'declined' && (
-                    <button style={{ margin: '4px 2px', background: 'red', color: '#fff', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer' }} onClick={() => updateStatus(app.id, 'declined')}>Decline</button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+    <Box sx={{ maxWidth: 1400, mx: 'auto', my: 5, px: 2 }}>
+      <Paper elevation={6} sx={{ borderRadius: 5, p: { xs: 2, sm: 4 }, background: 'rgba(255,255,255,0.98)' }}>
+        <Typography variant="h4" align="center" color="primary" fontWeight={800} gutterBottom letterSpacing={1} sx={{ mb: 2 }}>
+          Admin Dashboard
+        </Typography>
+        <Divider sx={{ mb: 3 }} />
+        {loading && <Typography align="center">Loading...</Typography>}
+        {error && <Typography align="center" color="error">{error}</Typography>}
+        {!loading && !error && (
+          <TableContainer component={Paper} elevation={0} sx={{ borderRadius: 3, boxShadow: '0 2px 16px #e0e0e0', background: '#fff' }}>
+            <Table sx={{ minWidth: 1200 }}>
+              <TableHead>
+                <TableRow sx={{ background: '#f5f5f5' }}>
+                  <TableCell><b>Year</b></TableCell>
+                  <TableCell><b>Name</b></TableCell>
+                  <TableCell><b>Gender</b></TableCell>
+                  <TableCell><b>Ethnicity</b></TableCell>
+                  <TableCell><b>Home Language</b></TableCell>
+                  <TableCell><b>Email</b></TableCell>
+                  <TableCell><b>Institution</b></TableCell>
+                  <TableCell><b>Student #</b></TableCell>
+                  <TableCell><b>Phone</b></TableCell>
+                  <TableCell><b>Home Address</b></TableCell>
+                  <TableCell><b>Guardian</b></TableCell>
+                  <TableCell><b>Uploads</b></TableCell>
+                  <TableCell><b>Submitted</b></TableCell>
+                  <TableCell><b>Status</b></TableCell>
+                  <TableCell><b>Actions</b></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {applications.map(app => (
+                  <TableRow key={app.id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                    <TableCell>{app.year}</TableCell>
+                    <TableCell>{app.full_names}</TableCell>
+                    <TableCell>{app.gender}</TableCell>
+                    <TableCell>{app.ethnicity}</TableCell>
+                    <TableCell>{app.home_language}</TableCell>
+                    <TableCell>{app.email}</TableCell>
+                    <TableCell>{app.institution}</TableCell>
+                    <TableCell>{app.student_number}</TableCell>
+                    <TableCell>{app.phone}</TableCell>
+                    <TableCell>{app.home_address}</TableCell>
+                    <TableCell>
+                      <Typography variant="body2" fontWeight={600}>{app.guardian_name}</Typography>
+                      <Typography variant="caption">({app.guardian_relationship})</Typography><br/>
+                      <Typography variant="body2">{app.guardian_phone}</Typography><br/>
+                      <Typography variant="body2">{app.guardian_email}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <a href={`/${app.photo}`} target="_blank" rel="noopener noreferrer">Photo</a><br/>
+                      <a href={`/${app.id_card_1}`} target="_blank" rel="noopener noreferrer">ID 1</a><br/>
+                      <a href={`/${app.id_card_2}`} target="_blank" rel="noopener noreferrer">ID 2</a>
+                    </TableCell>
+                    <TableCell>{app.submitted_at ? new Date(app.submitted_at).toLocaleString() : ''}</TableCell>
+                    <TableCell>
+                      <Chip
+                        label={app.status || 'pending'}
+                        color={app.status === 'accepted' ? 'success' : app.status === 'declined' ? 'error' : 'warning'}
+                        sx={{ fontWeight: 700, textTransform: 'capitalize' }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {app.status !== 'accepted' && (
+                        <Button
+                          variant="contained"
+                          color="success"
+                          size="small"
+                          sx={{ mb: 1, mr: 1, borderRadius: 2, fontWeight: 700 }}
+                          onClick={() => updateStatus(app.id, 'accepted')}
+                        >Accept</Button>
+                      )}
+                      {app.status !== 'declined' && (
+                        <Button
+                          variant="contained"
+                          color="error"
+                          size="small"
+                          sx={{ borderRadius: 2, fontWeight: 700 }}
+                          onClick={() => updateStatus(app.id, 'declined')}
+                        >Decline</Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Paper>
+    </Box>
   );
+  
 }
 
 export default AdminDashboard;
