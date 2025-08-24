@@ -7,7 +7,7 @@ function AdminDashboard() {
 
   const fetchApplications = () => {
     setLoading(true);
-    fetch('http://localhost:5000/api/applications')
+  fetch('https://student-accomodation-g42p.onrender.com/api/applications')
       .then(res => res.json())
       .then(data => {
         setApplications(data);
@@ -24,7 +24,7 @@ function AdminDashboard() {
   }, []);
 
   const updateStatus = async (id, status) => {
-    await fetch(`http://localhost:5000/api/applications/${id}/status`, {
+  await fetch(`https://student-accomodation-g42p.onrender.com/api/applications/${id}/status`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status })

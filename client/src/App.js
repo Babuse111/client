@@ -61,7 +61,7 @@ function ApplicationForm() {
       if (value) formData.append(key, value);
     });
     try {
-      const res = await fetch('http://localhost:5000/api/apply', {
+  const res = await fetch('https://student-accomodation-g42p.onrender.com/api/apply', {
         method: 'POST',
         body: formData
       });
