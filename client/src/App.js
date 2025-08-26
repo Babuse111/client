@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import HomePage from './HomePage';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import AdminPage from './AdminDashboard';
 import {
   Box,
   Fade,
@@ -16,7 +16,6 @@ import {
   Alert
 } from '@mui/material';
 import khayaLogo from './logo-khayalethu.png';
-import AdminPage from './AdminDashboard';
 import './App.css';
 
 function ApplicationForm() {
@@ -240,28 +239,20 @@ function ApplicationForm() {
   );
 }
 
-
-
 // Wrapper component for HomePage to use useNavigate inside Router context
 function HomeWithNav() {
   const navigate = useNavigate();
   return <HomePage onApply={() => navigate('/apply')} />;
 }
 
-function AppRoutes() {
-  return (
-    <Routes>
-      <Route path="/admin" element={<AdminPage />} />
-      <Route path="/apply" element={<ApplicationForm />} />
-      <Route path="/" element={<HomeWithNav />} />
-    </Routes>
-  );
-}
-
 function App() {
   return (
     <Router>
-      <AppRoutes />
+      <Routes>
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/apply" element={<ApplicationForm />} />
+        <Route path="/" element={<HomeWithNav />} />
+      </Routes>
     </Router>
   );
 }
