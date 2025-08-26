@@ -241,12 +241,14 @@ function ApplicationForm() {
 }
 
 
+
+// Wrapper component for HomePage to use useNavigate inside Router context
+function HomeWithNav() {
+  const navigate = useNavigate();
+  return <HomePage onApply={() => navigate('/apply')} />;
+}
+
 function App() {
-  // HomePage navigation handler
-  const HomeWithNav = () => {
-    const navigate = useNavigate();
-    return <HomePage onApply={() => navigate('/apply')} />;
-  };
   return (
     <Router>
       <Routes>
