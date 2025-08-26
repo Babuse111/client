@@ -8,14 +8,13 @@ import FlashOnIcon from '@mui/icons-material/FlashOn';
 import SecurityIcon from '@mui/icons-material/Security';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import logo from './logo-khayalethu.png';
 
-const images = [
-  require('./logo-khayalethu.png'),
-  require('./logo-khayalethu1.png'),
-  require('./logo.svg'),
-  // Add more images of your accommodation here
-];
+import logo from './logo-khayalethu.png';
+import logo1 from './logo-khayalethu.png';
+import logo2 from './logo-khayalethu1.png';
+import logoSvg from './logo.svg';
+
+const images = [logo1, logo2, logoSvg];
 
 const amenities = [
   { icon: <WifiIcon color="primary" />, label: 'Uncapped Wi-Fi' },
