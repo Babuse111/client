@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import HomePage from './HomePage';
-import AdminPage from './AdminDashboard';
+import AdminDashboard from './AdminDashboard';
 import {
   Box,
   Fade,
@@ -249,7 +249,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/admin" element={<AdminPage />} />
+  <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/apply" element={<ApplicationForm />} />
         <Route path="/" element={<HomeWithNav />} />
       </Routes>
