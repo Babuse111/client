@@ -248,14 +248,20 @@ function HomeWithNav() {
   return <HomePage onApply={() => navigate('/apply')} />;
 }
 
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/admin" element={<AdminPage />} />
+      <Route path="/apply" element={<ApplicationForm />} />
+      <Route path="/" element={<HomeWithNav />} />
+    </Routes>
+  );
+}
+
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/apply" element={<ApplicationForm />} />
-        <Route path="/" element={<HomeWithNav />} />
-      </Routes>
+      <AppRoutes />
     </Router>
   );
 }
