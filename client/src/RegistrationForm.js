@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Typography, Button, TextField, Divider, MenuItem, Alert, CircularProgress } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-
 import emailjs from 'emailjs-com';
 
 // Replace with your EmailJS service ID, template ID, and user ID
@@ -33,7 +32,6 @@ const initialForm = {
   guardian_phone: '',
   guardian_email: ''
 };
-
 
 function RegistrationForm() {
   const location = useLocation();
