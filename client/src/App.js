@@ -10,12 +10,14 @@ import RegistrationForm from './RegistrationForm';
 function HomePage() {
   const navigate = useNavigate();
   const [slide, setSlide] = useState(0);
+  const [autoSlide, setAutoSlide] = useState(true);
   useEffect(() => {
+    if (!autoSlide) return;
     const timer = setTimeout(() => {
       setSlide((prev) => (prev === 0 ? 1 : 0));
     }, 7000); // Slower transition (7 seconds)
     return () => clearTimeout(timer);
-  }, [slide]);
+  }, [slide, autoSlide]);
 
   return (
     <Box sx={{ bgcolor: '#e0f7fa', minHeight: '100vh', transition: 'background 0.5s' }}>
@@ -141,7 +143,7 @@ function HomePage() {
                 <Typography variant="body1" sx={{ mb: 3, fontSize: { xs: 15, md: 20 }, color: '#fff', maxWidth: 600 }}>
                   Your home away from home. Discover a vibrant student community, modern amenities, and a welcoming atmosphere.
                 </Typography>
-                <Button variant="contained" color="warning" size="large" sx={{ fontWeight: 700, px: 4, fontSize: 18, borderRadius: 2, boxShadow: '0 2px 8px #0097a7' }} onClick={() => setSlide(1)}>
+                <Button variant="contained" color="warning" size="large" sx={{ fontWeight: 700, px: 4, fontSize: 18, borderRadius: 2, boxShadow: '0 2px 8px #0097a7' }} onClick={() => { setSlide(1); setAutoSlide(false); }}>
                   Explore Clau-Clau
                 </Button>
               </Box>
@@ -199,13 +201,22 @@ function HomePage() {
               <Typography variant="body1" sx={{ mb: 3, fontSize: { xs: 16, md: 20 }, textAlign: 'center' }}>
                 What we offer:
               </Typography>
-              <Box component="ul" sx={{ listStyle: 'none', p: 0, mb: 4, textAlign: 'left', fontSize: { xs: 28, md: 32 }, color: '#fff', maxWidth: 320, display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-                  <Box component="li" sx={{ mb: 1 }}>High-speed Internet</Box>
-                  <Box component="li" sx={{ mb: 1 }}>Fully Furnished Rooms</Box>
-                  <Box component="li" sx={{ mb: 1 }}>Laundry Facilities</Box>
-                  <Box component="li" sx={{ mb: 1 }}>24/7 Security</Box>
-                  <Box component="li" sx={{ mb: 1 }}>Public Transport Access</Box>
-                  <Box component="li" sx={{ mb: 1 }}>Community Events</Box>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mb: 4, maxWidth: 320 }}>
+                {[
+                  { label: 'Wifi', icon: <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#00bcd4"/><path d="M6.5 13.5C8.5 11.5 15.5 11.5 17.5 13.5" stroke="white" strokeWidth="2" strokeLinecap="round"/><path d="M9.5 16.5C10.5 15.5 13.5 15.5 14.5 16.5" stroke="white" strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="19" r="1" fill="white"/></svg> },
+                  { label: '24/hr Security', icon: <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#00bcd4"/><rect x="8" y="10" width="8" height="6" rx="3" stroke="white" strokeWidth="2" fill="none"/><path d="M12 10V8" stroke="white" strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="16" r="1" fill="white"/></svg> },
+                  { label: 'Laundry Facilities', icon: <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#00bcd4"/><rect x="8" y="8" width="8" height="8" rx="2" stroke="white" strokeWidth="2" fill="none"/><circle cx="12" cy="12" r="2" stroke="white" strokeWidth="2" fill="none"/><path d="M10 16h4" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg> },
+                  { label: 'CCTV', icon: <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#00bcd4"/><rect x="9" y="11" width="6" height="2" rx="1" stroke="white" strokeWidth="2" fill="none"/><circle cx="12" cy="14" r="1" fill="white"/><path d="M8 9l8 0" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg> },
+                  { label: 'Backup Water', icon: <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#00bcd4"/><path d="M12 7C14 10 17 13 12 17C7 13 10 10 12 7Z" stroke="white" strokeWidth="2" fill="none"/></svg> },
+                  { label: 'Backup Power', icon: <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#00bcd4"/><rect x="10" y="8" width="4" height="8" rx="2" stroke="white" strokeWidth="2" fill="none"/><path d="M12 8V16" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg> },
+                  { label: 'Study Hub', icon: <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#00bcd4"/><rect x="8" y="10" width="8" height="4" rx="2" stroke="white" strokeWidth="2" fill="none"/><path d="M12 10V8" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg> },
+                  { label: 'Swimming Pool', icon: <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#00bcd4"/><path d="M6 16c2 2 10 2 12 0" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none"/><path d="M8 12c1.5 1.5 7.5 1.5 9 0" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none"/><path d="M9 8c1 1 5 1 6 0" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none"/></svg> }
+                ].map((item, idx) => (
+                  <Box key={idx} sx={{ bgcolor: '#00bcd4', color: '#fff', borderRadius: 3, p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: 2 }}>
+                    <Box sx={{ mb: 1 }}>{item.icon}</Box>
+                    <Typography variant="body1" sx={{ fontWeight: 600, textAlign: 'center', fontSize: { xs: 18, md: 22 } }}>{item.label}</Typography>
+                  </Box>
+                ))}
               </Box>
               <Button variant="contained" color="warning" size="large" sx={{ fontWeight: 700, px: 5, fontSize: 18 }} onClick={() => navigate('/register')}>
                 Apply Now

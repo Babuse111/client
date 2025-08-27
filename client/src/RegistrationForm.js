@@ -2,6 +2,20 @@ import React, { useState } from 'react';
 import { Box, Typography, Button, TextField, Divider, MenuItem, Alert, CircularProgress } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import emailjs from 'emailjs-com';
+
+// Replace with your EmailJS service ID, template ID, and user ID
+const SERVICE_ID = 'service_u6q29md';
+const TEMPLATE_ID = 'your_template_id';
+const USER_ID = 'your_user_id';
+
+const sendConfirmationEmail = async (email, name) => {
+  return emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+    to_email: email,
+    to_name: name,
+  }, USER_ID);
+};
+
 const initialForm = {
   year: '',
   id_number: '',
@@ -28,6 +42,7 @@ function RegistrationForm() {
   const [step, setStep] = useState(1); // Start at Personal Details
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -37,18 +52,62 @@ function RegistrationForm() {
   const handleNext = () => setStep((s) => s + 1);
   const handleBack = () => setStep((s) => s - 1);
 
+  // Validate all required fields
+  const isFormValid = () => {
+    const requiredFields = [
+      'year', 'id_number', 'gender', 'ethnicity', 'home_language', 'full_names', 'student_number', 'institution', 'email', 'phone', 'home_address',
+      'guardian_name', 'guardian_relationship', 'guardian_phone', 'guardian_email'
+    ];
+    return requiredFields.every((key) => form[key] && form[key].toString().trim() !== '');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setMessage('');
-    // Simulate API call
-    setTimeout(() => {
+    if (!isFormValid()) {
+      setMessage('Please fill in all required fields.');
+      return;
+    }
+    setLoading(true);
+    try {
+      await sendConfirmationEmail(form.email, form.full_names);
+      setSubmitted(true);
+    } catch (err) {
+      setMessage('Failed to send confirmation email. Please try again.');
+    } finally {
       setLoading(false);
-      setMessage('Application submitted successfully!');
-      setForm(initialForm);
-      setStep(1);
-    }, 1500);
+    }
   };
+
+  if (submitted) {
+    return (
+      <Box sx={{ minHeight: '100vh', background: '#f5f8f7', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ bgcolor: '#00bcd4', color: '#fff', py: 2, px: 0, borderRadius: '0 0 24px 24px', mb: 0, boxShadow: 2 }}>
+          <Box sx={{ maxWidth: 'lg', mx: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => navigate('/')}> 
+              <img src={process.env.PUBLIC_URL + '/logo.png'} alt="Logo" style={{ width: 56, marginRight: 16 }} />
+              <Typography variant="h5" fontWeight={900} letterSpacing={2} sx={{ textShadow: '0 2px 8px #0097a7' }}>
+                Khayalethu Student Living
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', mt: 10 }}>
+          <Typography variant="h4" color="primary" sx={{ mb: 2, fontWeight: 700 }}>
+            Application Submitted
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            Your application has been submitted and a confirmation email has been sent to:
+          </Typography>
+          <Typography variant="h6" color="secondary" sx={{ mb: 4, fontWeight: 600 }}>{form.email}</Typography>
+          <Typography variant="body2" sx={{ color: '#666', maxWidth: 400, textAlign: 'center' }}>
+            Thank you for applying for student accommodation. Your application is being reviewed. You will receive further updates via email.
+          </Typography>
+          <Button variant="contained" color="primary" sx={{ mt: 4 }} onClick={() => navigate('/')}>Back to Home</Button>
+        </Box>
+      </Box>
+    );
+  }
 
   const stepContent = [
     // Step 1: Personal Details
