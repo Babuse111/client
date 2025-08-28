@@ -201,14 +201,6 @@ function HomePage() {
               alt="Accommodation"
               style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.85)', borderTopLeftRadius: 32, borderBottomLeftRadius: 32, zIndex: 0 }}
             />
-            <Box sx={{ position: 'absolute', top: { xs: 16, md: 48 }, left: { xs: 16, md: 48 }, bgcolor: 'rgba(0,188,212,0.85)', px: { xs: 2, md: 4 }, py: { xs: 1, md: 3 }, borderRadius: 2, maxWidth: { xs: '80%', md: '60%' } }}>
-              <Typography variant="h3" fontWeight={900} color="#fff" sx={{ fontSize: { xs: 28, md: 40 } }}>
-                Khayalethu Student Living
-              </Typography>
-              <Typography variant="h4" fontWeight={700} color="#ffe082" sx={{ fontSize: { xs: 22, md: 32 } }}>
-                {/* Removed Clau-Clau */}
-              </Typography>
-            </Box>
           </Box>
           {/* Right: Info Card */}
           <Box sx={{ flex: 1, bgcolor: '#6a1b9a', color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', p: { xs: 3, md: 6 }, borderTopRightRadius: 32, borderBottomRightRadius: 32 }}>

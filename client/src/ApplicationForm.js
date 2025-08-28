@@ -50,8 +50,13 @@ export default function ApplicationForm() {
 
   // Validation for required fields
   const validateStep = () => {
+    // All steps except welcome (step 0) require validation
+    if (step === 0) {
+      // No fields to validate on welcome step
+      return true;
+    }
+    // Step 1: Personal details
     if (step === 1) {
-      // Personal details step
       const requiredFields = [
         'year', 'full_names', 'id_number', 'student_number', 'institution', 'email', 'phone', 'home_address', 'gender', 'ethnicity', 'home_language', 'id_card_photo_front', 'id_card_photo_back', 'personal_photo'
       ];
@@ -62,9 +67,22 @@ export default function ApplicationForm() {
         }
       }
     }
+    // Step 2: Guardian info
     if (step === 2) {
-      // Guardian info step
       const requiredFields = [
+        'guardian_name', 'guardian_relationship', 'guardian_phone', 'guardian_email'
+      ];
+      for (let field of requiredFields) {
+        if (!form[field] || (typeof form[field] === 'string' && form[field].trim() === '')) {
+          setError('Please fill in all required fields.');
+          return false;
+        }
+      }
+    }
+    // Step 3: Review & Submit (should not allow next if any field is missing)
+    if (step === 3) {
+      const requiredFields = [
+        'year', 'full_names', 'id_number', 'student_number', 'institution', 'email', 'phone', 'home_address', 'gender', 'ethnicity', 'home_language', 'id_card_photo_front', 'id_card_photo_back', 'personal_photo',
         'guardian_name', 'guardian_relationship', 'guardian_phone', 'guardian_email'
       ];
       for (let field of requiredFields) {
@@ -78,34 +96,12 @@ export default function ApplicationForm() {
     return true;
   };
 
-  // Helper to check if current step is valid (for disabling Next button)
-  const isStepValid = () => {
-    if (step === 1) {
-      const requiredFields = [
-        'year', 'full_names', 'id_number', 'student_number', 'institution', 'email', 'phone', 'home_address', 'gender', 'ethnicity', 'home_language', 'id_card_photo_front', 'id_card_photo_back', 'personal_photo'
-      ];
-      for (let field of requiredFields) {
-        if (!form[field] || (typeof form[field] === 'string' && form[field].trim() === '')) {
-          return false;
-        }
-      }
-    }
-    if (step === 2) {
-      const requiredFields = [
-        'guardian_name', 'guardian_relationship', 'guardian_phone', 'guardian_email'
-      ];
-      for (let field of requiredFields) {
-        if (!form[field] || (typeof form[field] === 'string' && form[field].trim() === '')) {
-          return false;
-        }
-      }
-    }
-    return true;
-  };
 
   const handleNext = () => {
     if (validateStep()) {
       setStep((s) => s + 1);
+    } else {
+      setError('Please fill in all required fields.');
     }
   };
   const handleBack = () => {
@@ -138,6 +134,7 @@ export default function ApplicationForm() {
         Click Next to begin your application.
       </Typography>
       <Button variant="contained" color="primary" size="large" onClick={handleNext} sx={{ mt: 2, fontWeight: 700, px: 5 }}>Next</Button>
+      {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
     </Box>,
     // Step 1: Personal Details
     <Box key="personal">
@@ -225,8 +222,8 @@ export default function ApplicationForm() {
       </Box>
       {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
-        <Button variant="outlined" color="primary" onClick={handleBack}>Back</Button>
-        <Button variant="contained" color="primary" onClick={handleNext} disabled={!isStepValid()}>Next</Button>
+  <Button variant="outlined" color="primary" onClick={handleBack}>Back</Button>
+  <Button variant="contained" color="primary" onClick={handleNext}>Next</Button>
       </Box>
     </Box>,
     // Step 2: Guardian/Parent Info
@@ -240,8 +237,8 @@ export default function ApplicationForm() {
       <TextField label="Email Address" type="email" name="guardian_email" value={form.guardian_email} onChange={handleChange} required fullWidth margin="normal" />
       {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
-        <Button variant="outlined" color="primary" onClick={handleBack}>Back</Button>
-        <Button variant="contained" color="primary" onClick={handleNext} disabled={!isStepValid()}>Next</Button>
+  <Button variant="outlined" color="primary" onClick={handleBack}>Back</Button>
+  <Button variant="contained" color="primary" onClick={handleNext}>Next</Button>
       </Box>
     </Box>,
     // Step 3: Review & Submit
