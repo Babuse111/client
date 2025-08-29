@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  MenuItem,
-  Paper,
-  TextField,
-  Typography,
-  Alert,
-  CircularProgress
-} from '@mui/material';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const initialForm = {
   year: '',
@@ -33,66 +31,81 @@ const initialForm = {
   personal_photo: null
 };
 
+
 export default function ApplicationForm() {
   const [form, setForm] = useState(initialForm);
   const [step, setStep] = useState(0); // 0: Welcome, 1: Personal, 2: Guardian, 3: Review
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [fieldErrors, setFieldErrors] = useState({});
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setFieldErrors({ ...fieldErrors, [e.target.name]: false });
   };
 
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     setForm({ ...form, [name]: files[0] });
-    setFieldErrors({ ...fieldErrors, [name]: false });
   };
 
   // Validation for required fields
   const validateStep = () => {
-    let requiredFields = [];
+    // All steps except welcome (step 0) require validation
+    if (step === 0) {
+      // No fields to validate on welcome step
+      return true;
+    }
+    // Step 1: Personal details
     if (step === 1) {
-      requiredFields = [
+      const requiredFields = [
         'year', 'full_names', 'id_number', 'student_number', 'institution', 'email', 'phone', 'home_address', 'gender', 'ethnicity', 'home_language', 'id_card_photo_front', 'id_card_photo_back', 'personal_photo'
       ];
+      for (let field of requiredFields) {
+        if (!form[field] || (typeof form[field] === 'string' && form[field].trim() === '')) {
+          setError('Please fill in all required fields.');
+          return false;
+        }
+      }
     }
+    // Step 2: Guardian info
     if (step === 2) {
-      requiredFields = [
+      const requiredFields = [
         'guardian_name', 'guardian_relationship', 'guardian_phone', 'guardian_email'
       ];
+      for (let field of requiredFields) {
+        if (!form[field] || (typeof form[field] === 'string' && form[field].trim() === '')) {
+          setError('Please fill in all required fields.');
+          return false;
+        }
+      }
     }
+    // Step 3: Review & Submit (should not allow next if any field is missing)
     if (step === 3) {
-      requiredFields = [
+      const requiredFields = [
         'year', 'full_names', 'id_number', 'student_number', 'institution', 'email', 'phone', 'home_address', 'gender', 'ethnicity', 'home_language', 'id_card_photo_front', 'id_card_photo_back', 'personal_photo',
         'guardian_name', 'guardian_relationship', 'guardian_phone', 'guardian_email'
       ];
-    }
-
-    let newFieldErrors = {};
-    let hasError = false;
-    requiredFields.forEach((field) => {
-      if (!form[field] || (typeof form[field] === 'string' && form[field].trim() === '')) {
-        newFieldErrors[field] = true;
-        hasError = true;
+      for (let field of requiredFields) {
+        if (!form[field] || (typeof form[field] === 'string' && form[field].trim() === '')) {
+          setError('Please fill in all required fields.');
+          return false;
+        }
       }
-    });
-    setFieldErrors(newFieldErrors);
-    setError(hasError ? 'Please fill in all required fields.' : '');
-    return !hasError;
+    }
+    setError('');
+    return true;
   };
+
 
   const handleNext = () => {
     if (validateStep()) {
       setStep((s) => s + 1);
+    } else {
+      setError('Please fill in all required fields.');
     }
   };
   const handleBack = () => {
     setError('');
-    setFieldErrors({});
     setStep((s) => s - 1);
   };
 
@@ -102,12 +115,12 @@ export default function ApplicationForm() {
     if (!validateStep()) return;
     setLoading(true);
     setMessage('');
+    // Simulate API call
     setTimeout(() => {
       setLoading(false);
       setMessage('Application submitted successfully!');
       setForm(initialForm);
       setStep(0);
-      setFieldErrors({});
     }, 1500);
   };
 
@@ -128,21 +141,16 @@ export default function ApplicationForm() {
       <Divider sx={{ mb: 2 }}>
         <Typography variant="overline" color="primary">Personal Details</Typography>
       </Divider>
-      <TextField select label="Year of Application" name="year" value={form.year} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.year} helperText={fieldErrors.year && "Required"} >
+      <TextField select label="Year of Application" name="year" value={form.year} onChange={handleChange} required fullWidth margin="normal">
         <MenuItem value="">Select Year</MenuItem>
         <MenuItem value="2025">2025</MenuItem>
         <MenuItem value="2026">2026</MenuItem>
         <MenuItem value="2027">2027</MenuItem>
       </TextField>
-      <TextField label="Full Names" name="full_names" value={form.full_names} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.full_names} helperText={fieldErrors.full_names && "Required"} />
-      <TextField label="ID Number" name="id_number" value={form.id_number} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.id_number} helperText={fieldErrors.id_number && "Required"} />
-      <TextField label="Student Number" name="student_number" value={form.student_number} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.student_number} helperText={fieldErrors.student_number && "Required"} />
-      <TextField select label="Institution" name="institution" value={form.institution} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.institution} helperText={fieldErrors.institution && "Required"} >
+      <TextField label="Full Names" name="full_names" value={form.full_names} onChange={handleChange} required fullWidth margin="normal" />
+      <TextField label="ID Number" name="id_number" value={form.id_number} onChange={handleChange} required fullWidth margin="normal" />
+      <TextField label="Student Number" name="student_number" value={form.student_number} onChange={handleChange} required fullWidth margin="normal" />
+      <TextField select label="Institution" name="institution" value={form.institution} onChange={handleChange} required fullWidth margin="normal">
         <MenuItem value="">Select Institution</MenuItem>
         <MenuItem value="UMP">UMP</MenuItem>
         <MenuItem value="Ehlandzeni TVET Collage">Ehlandzeni TVET Collage</MenuItem>
@@ -150,21 +158,16 @@ export default function ApplicationForm() {
         <MenuItem value="Tshwane University of Technology">Tshwane University of Technology</MenuItem>
         <MenuItem value="Other">Other</MenuItem>
       </TextField>
-      <TextField label="Email" type="email" name="email" value={form.email} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.email} helperText={fieldErrors.email && "Required"} />
-      <TextField label="Phone" name="phone" value={form.phone} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.phone} helperText={fieldErrors.phone && "Required"} />
-      <TextField label="Home Address" name="home_address" value={form.home_address} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.home_address} helperText={fieldErrors.home_address && "Required"} />
-      <TextField select label="Gender" name="gender" value={form.gender} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.gender} helperText={fieldErrors.gender && "Required"} >
+      <TextField label="Email" type="email" name="email" value={form.email} onChange={handleChange} required fullWidth margin="normal" />
+      <TextField label="Phone" name="phone" value={form.phone} onChange={handleChange} required fullWidth margin="normal" />
+      <TextField label="Home Address" name="home_address" value={form.home_address} onChange={handleChange} required fullWidth margin="normal" />
+      <TextField select label="Gender" name="gender" value={form.gender} onChange={handleChange} required fullWidth margin="normal">
         <MenuItem value="">Select Gender</MenuItem>
         <MenuItem value="male">Male</MenuItem>
         <MenuItem value="female">Female</MenuItem>
         <MenuItem value="other">Other</MenuItem>
       </TextField>
-      <TextField select label="Ethnicity" name="ethnicity" value={form.ethnicity} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.ethnicity} helperText={fieldErrors.ethnicity && "Required"} >
+      <TextField select label="Ethnicity" name="ethnicity" value={form.ethnicity} onChange={handleChange} required fullWidth margin="normal">
         <MenuItem value="">Select Ethnicity</MenuItem>
         <MenuItem value="African">African</MenuItem>
         <MenuItem value="Coloured">Coloured</MenuItem>
@@ -172,8 +175,7 @@ export default function ApplicationForm() {
         <MenuItem value="White">White</MenuItem>
         <MenuItem value="Other">Other</MenuItem>
       </TextField>
-      <TextField select label="Home Language" name="home_language" value={form.home_language} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.home_language} helperText={fieldErrors.home_language && "Required"} >
+      <TextField select label="Home Language" name="home_language" value={form.home_language} onChange={handleChange} required fullWidth margin="normal">
         <MenuItem value="">Select Language</MenuItem>
         <MenuItem value="siSwati">siSwati</MenuItem>
         <MenuItem value="isiZulu">isiZulu</MenuItem>
@@ -184,74 +186,44 @@ export default function ApplicationForm() {
       </TextField>
       {/* File upload for ID card front */}
       <Box sx={{ mt: 2 }}>
-        <Typography variant="body2" sx={{ mb: 1, fontWeight: 600 }}>
-          Upload your ID card (front) <span style={{ color: 'red' }}>*</span>
-        </Typography>
+        <Typography variant="body2" sx={{ mb: 1, fontWeight: 600 }}>Upload your ID card (front) <span style={{ color: 'red' }}>*</span></Typography>
         <input
           type="file"
           accept="image/*"
           name="id_card_photo_front"
           onChange={handleFileChange}
-          style={{
-            marginBottom: 12,
-            border: fieldErrors.id_card_photo_front ? '1px solid red' : undefined,
-            padding: 4,
-            borderRadius: 4
-          }}
+          style={{ marginBottom: 12 }}
         />
-        {fieldErrors.id_card_photo_front && (
-          <Typography variant="caption" color="error">Required</Typography>
-        )}
         {form.id_card_photo_front && <Typography variant="caption" color="success.main">Selected: {form.id_card_photo_front.name}</Typography>}
       </Box>
       {/* File upload for ID card back */}
       <Box sx={{ mt: 2 }}>
-        <Typography variant="body2" sx={{ mb: 1, fontWeight: 600 }}>
-          Upload your ID card (back) <span style={{ color: 'red' }}>*</span>
-        </Typography>
+        <Typography variant="body2" sx={{ mb: 1, fontWeight: 600 }}>Upload your ID card (back) <span style={{ color: 'red' }}>*</span></Typography>
         <input
           type="file"
           accept="image/*"
           name="id_card_photo_back"
           onChange={handleFileChange}
-          style={{
-            marginBottom: 12,
-            border: fieldErrors.id_card_photo_back ? '1px solid red' : undefined,
-            padding: 4,
-            borderRadius: 4
-          }}
+          style={{ marginBottom: 12 }}
         />
-        {fieldErrors.id_card_photo_back && (
-          <Typography variant="caption" color="error">Required</Typography>
-        )}
         {form.id_card_photo_back && <Typography variant="caption" color="success.main">Selected: {form.id_card_photo_back.name}</Typography>}
       </Box>
       {/* File upload for personal photo */}
       <Box sx={{ mt: 2 }}>
-        <Typography variant="body2" sx={{ mb: 1, fontWeight: 600 }}>
-          Upload your personal photo <span style={{ color: 'red' }}>*</span>
-        </Typography>
+        <Typography variant="body2" sx={{ mb: 1, fontWeight: 600 }}>Upload your personal photo <span style={{ color: 'red' }}>*</span></Typography>
         <input
           type="file"
           accept="image/*"
           name="personal_photo"
           onChange={handleFileChange}
-          style={{
-            marginBottom: 12,
-            border: fieldErrors.personal_photo ? '1px solid red' : undefined,
-            padding: 4,
-            borderRadius: 4
-          }}
+          style={{ marginBottom: 12 }}
         />
-        {fieldErrors.personal_photo && (
-          <Typography variant="caption" color="error">Required</Typography>
-        )}
         {form.personal_photo && <Typography variant="caption" color="success.main">Selected: {form.personal_photo.name}</Typography>}
       </Box>
       {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
-        <Button variant="outlined" color="primary" onClick={handleBack}>Back</Button>
-        <Button variant="contained" color="primary" onClick={handleNext}>Next</Button>
+  <Button variant="outlined" color="primary" onClick={handleBack}>Back</Button>
+  <Button variant="contained" color="primary" onClick={handleNext}>Next</Button>
       </Box>
     </Box>,
     // Step 2: Guardian/Parent Info
@@ -259,18 +231,14 @@ export default function ApplicationForm() {
       <Divider sx={{ mb: 2 }}>
         <Typography variant="overline" color="primary">Guardian/Parent Info</Typography>
       </Divider>
-      <TextField label="Full Name" name="guardian_name" value={form.guardian_name} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.guardian_name} helperText={fieldErrors.guardian_name && "Required"} />
-      <TextField label="Relationship" name="guardian_relationship" value={form.guardian_relationship} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.guardian_relationship} helperText={fieldErrors.guardian_relationship && "Required"} />
-      <TextField label="Phone Number" name="guardian_phone" value={form.guardian_phone} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.guardian_phone} helperText={fieldErrors.guardian_phone && "Required"} />
-      <TextField label="Email Address" type="email" name="guardian_email" value={form.guardian_email} onChange={handleChange} required fullWidth margin="normal"
-        error={!!fieldErrors.guardian_email} helperText={fieldErrors.guardian_email && "Required"} />
+      <TextField label="Full Name" name="guardian_name" value={form.guardian_name} onChange={handleChange} required fullWidth margin="normal" />
+      <TextField label="Relationship" name="guardian_relationship" value={form.guardian_relationship} onChange={handleChange} required fullWidth margin="normal" />
+      <TextField label="Phone Number" name="guardian_phone" value={form.guardian_phone} onChange={handleChange} required fullWidth margin="normal" />
+      <TextField label="Email Address" type="email" name="guardian_email" value={form.guardian_email} onChange={handleChange} required fullWidth margin="normal" />
       {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
-        <Button variant="outlined" color="primary" onClick={handleBack}>Back</Button>
-        <Button variant="contained" color="primary" onClick={handleNext}>Next</Button>
+  <Button variant="outlined" color="primary" onClick={handleBack}>Back</Button>
+  <Button variant="contained" color="primary" onClick={handleNext}>Next</Button>
       </Box>
     </Box>,
     // Step 3: Review & Submit
