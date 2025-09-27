@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sample Student Photo - John Smith Doe</title>
+    <style>
+        body { margin:0; display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; font-family:Arial; }
+        .card { text-align:center; padding:40px; background:white; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1); }
+        .placeholder { width:200px; height:250px; background:#f0f8ff; margin:20px auto; border:2px solid #4169E1; border-radius:5px; display:flex; align-items:center; justify-content:center; color:#4169E1; font-weight:bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>📸 Sample Student Photo</h2>
+        <p><strong>Student:</strong> John Smith Doe</p>
+        <p><strong>ID:</strong> ST2024001</p>
+        <div class="placeholder">SAMPLE STUDENT PHOTO PLACEHOLDER</div>
+        <p><em>Sample sample student photo placeholder for testing</em></p>
+        <button onclick="window.close()">Close</button>
+    </div>
+</body>
+</html>

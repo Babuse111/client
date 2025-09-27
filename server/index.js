@@ -50,8 +50,11 @@ app.get('/api/applications', async (req, res) => {
     const result = await pool.query('SELECT * FROM applications ORDER BY id DESC');
     res.json(result.rows);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch applications' });
+    console.error('Database connection error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch applications', 
+      details: error.message 
+    });
   }
 });
 
