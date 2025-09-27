@@ -10,10 +10,12 @@ function AdminDashboard() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const fetchApplications = () => {
     setLoading(true);
-    fetch('http://localhost:5000/api/applications')
+    fetch(`${API_URL}/api/applications`)
       .then(res => res.json())
       .then(data => {
         setApplications(data);
@@ -30,7 +32,7 @@ function AdminDashboard() {
   }, []);
 
   const updateStatus = async (id, status) => {
-    await fetch(`http://localhost:5000/api/applications/${id}/status`, {
+    await fetch(`${API_URL}/api/applications/${id}/status`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status })
@@ -40,7 +42,7 @@ function AdminDashboard() {
 
   const exportToExcel = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/export/excel');
+      const response = await fetch(`${API_URL}/api/export/excel`);
       if (response.ok) {
         const blob = await response.blob();
         saveAs(blob, `student_applications_${new Date().toISOString().split('T')[0]}.xlsx`);
@@ -166,9 +168,9 @@ function AdminDashboard() {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Link href={`http://localhost:5000/${app.photo}`} target="_blank" rel="noopener noreferrer">Photo</Link><br/>
-                    <Link href={`http://localhost:5000/${app.id_card_1}`} target="_blank" rel="noopener noreferrer">ID 1</Link><br/>
-                    <Link href={`http://localhost:5000/${app.id_card_2}`} target="_blank" rel="noopener noreferrer">ID 2</Link><br/>
+                    <Link href={`${API_URL}/${app.photo}`} target="_blank" rel="noopener noreferrer">Photo</Link><br/>
+                    <Link href={`${API_URL}/${app.id_card_1}`} target="_blank" rel="noopener noreferrer">ID 1</Link><br/>
+                    <Link href={`${API_URL}/${app.id_card_2}`} target="_blank" rel="noopener noreferrer">ID 2</Link><br/>
                     {app.status !== 'accepted' && (
                       <Button variant="contained" color="success" size="small" sx={{ m: 0.5 }} onClick={() => updateStatus(app.id, 'accepted')}>Accept</Button>
                     )}
