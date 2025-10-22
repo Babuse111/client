@@ -1,0 +1,39 @@
+# The Space Hotels - Render Environment Variables
+
+# Copy these values to your Render service environment variables
+
+# Database (if using PostgreSQL on Render)
+DATABASE_URL=postgresql://username:password@host:port/database
+
+# The Space Hotels Email Configuration
+EMAIL_USER=admin@thespacehotels.online
+EMAIL_PASS=your_domain_email_password
+ADMIN_EMAIL=admin@thespacehotels.online
+
+# SMTP Configuration (optional - will auto-detect if not provided)
+SMTP_HOST=mail.thespacehotels.online
+SMTP_PORT=587
+
+# Server Configuration  
+PORT=5000
+
+# Instructions for Render Deployment:
+# 1. Go to your Render dashboard
+# 2. Select your backend service  
+# 3. Go to Environment tab
+# 4. Add/Update these environment variables:
+#    - EMAIL_USER: admin@thespacehotels.online
+#    - EMAIL_PASS: [your email password]
+#    - ADMIN_EMAIL: admin@thespacehotels.online
+#    - SMTP_HOST: mail.thespacehotels.online (if needed)
+#    - SMTP_PORT: 587 (if needed)
+# 5. Click "Save" and deploy the service
+
+# For Admin Dashboard (separate static site):
+# REACT_APP_API_URL=https://your-backend-service.onrender.com
+
+# Security Notes:
+# - Never commit this file with real passwords to GitHub
+# - Use strong passwords for your domain email
+# - Test locally before deploying to production
+# - Monitor email delivery and spam folders

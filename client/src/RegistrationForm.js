@@ -1,18 +1,34 @@
 import React, { useState } from 'react';
 import { Box, Typography, Button, TextField, Divider, MenuItem, Alert, CircularProgress } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import emailjs from 'emailjs-com';
+// Submit application to our backend API
+const submitApplication = async (formData) => {
+  // Create FormData to match server expectations
+  const data = new FormData();
+  
+  // Add all form fields
+  Object.keys(formData).forEach(key => {
+    if (formData[key] !== null && formData[key] !== undefined && formData[key] !== '') {
+      data.append(key, formData[key]);
+    }
+  });
+  
+  // Add placeholder files since server expects them (will be made optional on server)
+  data.append('photo', new File([''], 'placeholder.txt'));
+  data.append('id_card_1', new File([''], 'placeholder.txt'));
+  data.append('id_card_2', new File([''], 'placeholder.txt'));
 
-// Replace with your EmailJS service ID, template ID, and user ID
-const SERVICE_ID = 'service_u6q29md';
-const TEMPLATE_ID = 'your_template_id';
-const USER_ID = 'your_user_id';
+  const response = await fetch('http://localhost:5000/api/apply', {
+    method: 'POST',
+    body: data, // Send FormData, not JSON
+  });
 
-const sendConfirmationEmail = async (email, name) => {
-  return emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-    to_email: email,
-    to_name: name,
-  }, USER_ID);
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
 };
 
 const initialForm = {
@@ -68,10 +84,13 @@ function RegistrationForm() {
     }
     setLoading(true);
     try {
-      await sendConfirmationEmail(form.email, form.full_names);
+      const result = await submitApplication(form);
+      console.log('Application submitted successfully:', result);
       setSubmitted(true);
+      setMessage(result.message || 'Application submitted successfully!');
     } catch (err) {
-      setMessage('Failed to send confirmation email. Please try again.');
+      console.error('Submission error:', err);
+      setMessage(err.message || 'Failed to submit application. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -79,8 +98,8 @@ function RegistrationForm() {
 
   if (submitted) {
     return (
-      <Box sx={{ minHeight: '100vh', background: '#f5f8f7', display: 'flex', flexDirection: 'column' }}>
-        <Box sx={{ bgcolor: '#00bcd4', color: '#fff', py: 2, px: 0, borderRadius: '0 0 24px 24px', mb: 0, boxShadow: 2 }}>
+      <Box sx={{ minHeight: '100vh', background: 'linear-gradient(135deg, #faf9f7 0%, #fef7ed 100%)', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ background: 'linear-gradient(135deg, #d97706 0%, #ea580c 100%)', color: '#fff', py: 2, px: 0, borderRadius: '0 0 24px 24px', mb: 0, boxShadow: 2 }}>
           <Box sx={{ maxWidth: 'lg', mx: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => navigate('/')}> 
               <img src={process.env.PUBLIC_URL + '/logo.png'} alt="Logo" style={{ width: 56, marginRight: 16 }} />
@@ -198,9 +217,9 @@ function RegistrationForm() {
   ];
 
   return (
-    <Box sx={{ minHeight: '100vh', background: '#f5f8f7', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ minHeight: '100vh', background: 'linear-gradient(135deg, #faf9f7 0%, #fef7ed 100%)', display: 'flex', flexDirection: 'column' }}>
       {/* Top Blue Bar with Logo and Title (matches HomePage) */}
-      <Box sx={{ bgcolor: '#00bcd4', color: '#fff', py: 2, px: 0, borderRadius: '0 0 24px 24px', mb: 0, boxShadow: 2 }}>
+      <Box sx={{ background: 'linear-gradient(135deg, #d97706 0%, #ea580c 100%)', color: '#fff', py: 2, px: 0, borderRadius: '0 0 24px 24px', mb: 0, boxShadow: 2 }}>
         <Box sx={{ maxWidth: 'lg', mx: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 4 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => navigate('/')}> 
             <img src={process.env.PUBLIC_URL + '/logo.png'} alt="Logo" style={{ width: 56, marginRight: 16 }} />

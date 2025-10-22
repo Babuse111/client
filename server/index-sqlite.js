@@ -59,13 +59,26 @@ app.get('/', (req, res) => {
 // Test email notification route
 app.post('/api/test-email', (req, res) => {
   if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-    const transporter = nodemailer.createTransport({
+    // Determine if it's Gmail or custom domain
+    const isGmail = process.env.EMAIL_USER.includes('@gmail.com');
+    
+    const transporterConfig = isGmail ? {
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
       }
-    });
+    } : {
+      host: process.env.SMTP_HOST || 'smtp.' + process.env.EMAIL_USER.split('@')[1],
+      port: process.env.SMTP_PORT || 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    };
+    
+    const transporter = nodemailer.createTransport(transporterConfig);
 
     const testHTML = `
       <div style="font-family: Arial, sans-serif; max-width: 400px; margin: 0 auto; padding: 20px; text-align: center; border: 2px solid #4CAF50; border-radius: 10px;">
@@ -179,13 +192,26 @@ app.post('/api/apply', upload.fields([
     
     // Send detailed email notification to admin
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-      const transporter = nodemailer.createTransport({
+      // Determine if it's Gmail or custom domain
+      const isGmail = process.env.EMAIL_USER.includes('@gmail.com');
+      
+      const transporterConfig = isGmail ? {
         service: 'gmail',
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS
         }
-      });
+      } : {
+        host: process.env.SMTP_HOST || 'smtp.' + process.env.EMAIL_USER.split('@')[1],
+        port: process.env.SMTP_PORT || 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+        }
+      };
+      
+      const transporter = nodemailer.createTransport(transporterConfig);
 
       const currentDate = new Date().toLocaleDateString('en-ZA', {
         weekday: 'long',
