@@ -21,9 +21,10 @@ function AdminDashboard() {
         setApplications(data);
         setLoading(false);
       })
-      .catch(() => {
+      .catch(error => {
         setError('Failed to load applications');
         setLoading(false);
+        console.error('Error fetching applications:', error);
       });
   };
 
