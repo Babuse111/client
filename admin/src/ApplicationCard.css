@@ -1,0 +1,183 @@
+.application-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.application-card.processed {
+  opacity: 0.8;
+}
+
+.application-card.expanded {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.student-name {
+  font-weight: bold;
+  font-size: 16px;
+  flex: 1;
+}
+
+.student-info {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+  text-align: right;
+  font-size: 14px;
+  flex: 1;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+}
+
+.expand-icon {
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-warning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.badge-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.badge-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.card-details {
+  padding: 20px;
+  border-top: 1px solid #eee;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.detail-section h3 {
+  margin-top: 0;
+  font-size: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.label {
+  font-weight: 500;
+  margin-right: 5px;
+  min-width: 120px;
+}
+
+.documents-section {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.documents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.document {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.document a {
+  margin-top: 5px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.action-section {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.admin-note {
+  margin-bottom: 15px;
+}
+
+.admin-note label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.admin-note textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.accept-button, .decline-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.accept-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.decline-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.application-meta {
+  margin-top: 15px;
+  font-size: 12px;
+  color: #666;
+  display: flex;
+  justify-content: space-between;
+}

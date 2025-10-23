@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ApplicationCard from './ApplicationCard';
+import './AdminDashboard.css'; // Create this for styling
 import {
-  Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, CircularProgress, Alert, Link, Box
+  Container, Typography, Button, CircularProgress, Alert, Box
 } from '@mui/material';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
@@ -10,8 +12,13 @@ function AdminDashboard() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [filter, setFilter] = useState('all'); // 'all', 'pending', 'accepted', 'declined'
   
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+  useEffect(() => {
+    fetchApplications();
+  }, []);
 
   const fetchApplications = () => {
     setLoading(true);
@@ -28,32 +35,15 @@ function AdminDashboard() {
       });
   };
 
-  useEffect(() => {
-    fetchApplications();
-  }, []);
-
-  const updateStatus = async (id, status) => {
-    await fetch(`${API_URL}/api/applications/${id}/status`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status })
-    });
-    fetchApplications();
+  const handleStatusChange = (id, newStatus) => {
+    // Update local state when a status changes
+    setApplications(applications.map(app => 
+      app.id === id ? {...app, status: newStatus} : app
+    ));
   };
 
-  const exportToExcel = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/export/excel`);
-      if (response.ok) {
-        const blob = await response.blob();
-        saveAs(blob, `student_applications_${new Date().toISOString().split('T')[0]}.xlsx`);
-      } else {
-        alert('Failed to export Excel file');
-      }
-    } catch (error) {
-      console.error('Export error:', error);
-      alert('Failed to export Excel file');
-    }
+  const handleExportExcel = () => {
+    window.location.href = `${API_URL}/api/export/excel`;
   };
 
   const exportToPDF = () => {
@@ -99,91 +89,71 @@ function AdminDashboard() {
     doc.save(`student_applications_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
+  const filteredApplications = filter === 'all' 
+    ? applications 
+    : applications.filter(app => app.status === filter);
+
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" align="center" color="primary" gutterBottom sx={{ fontWeight: 700 }}>
         Admin Dashboard
       </Typography>
       
-      {/* Export Buttons */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 3 }}>
-        <Button 
-          variant="contained" 
-          color="success" 
-          onClick={exportToExcel}
-          disabled={loading || applications.length === 0}
-          sx={{ minWidth: 120 }}
-        >
-          📊 Export Excel
-        </Button>
-        <Button 
-          variant="contained" 
-          color="error" 
-          onClick={exportToPDF}
-          disabled={loading || applications.length === 0}
-          sx={{ minWidth: 120 }}
-        >
-          📄 Export PDF
-        </Button>
+      {/* Filter and Export Buttons */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Typography variant="subtitle1">Filter by status:</Typography>
+          <select value={filter} onChange={e => setFilter(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}>
+            <option value="all">All Applications</option>
+            <option value="pending">Pending</option>
+            <option value="accepted">Accepted</option>
+            <option value="declined">Declined</option>
+          </select>
+        </Box>
+        
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button 
+            variant="contained" 
+            color="success" 
+            onClick={handleExportExcel}
+            disabled={loading || applications.length === 0}
+            sx={{ minWidth: 120 }}
+          >
+            📊 Export Excel
+          </Button>
+          <Button 
+            variant="contained" 
+            color="error" 
+            onClick={exportToPDF}
+            disabled={loading || applications.length === 0}
+            sx={{ minWidth: 120 }}
+          >
+            📄 Export PDF
+          </Button>
+        </Box>
       </Box>
 
-      {loading && <CircularProgress sx={{ display: 'block', mx: 'auto', my: 4 }} />}
       {error && <Alert severity="error">{error}</Alert>}
-      {!loading && !error && (
-        <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
-          <Table>
-            <TableHead>
-              <TableRow sx={{ background: '#f5f5f5' }}>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Institution</TableCell>
-                <TableCell>Student #</TableCell>
-                <TableCell>Phone</TableCell>
-                <TableCell>Guardian</TableCell>
-                <TableCell>Submitted</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {applications.map(app => (
-                <TableRow key={app.id}>
-                  <TableCell>{app.full_names}</TableCell>
-                  <TableCell>{app.email}</TableCell>
-                  <TableCell>{app.institution}</TableCell>
-                  <TableCell>{app.student_number}</TableCell>
-                  <TableCell>{app.phone}</TableCell>
-                  <TableCell>
-                    {app.guardian_name} ({app.guardian_relationship})<br/>
-                    {app.guardian_phone}<br/>
-                    {app.guardian_email}
-                  </TableCell>
-                  <TableCell>{app.submitted_at ? new Date(app.submitted_at).toLocaleString() : ''}</TableCell>
-                  <TableCell>
-                    <Typography sx={{
-                      color: app.status === 'accepted' ? 'green' : app.status === 'declined' ? 'red' : '#bfa14a',
-                      fontWeight: 'bold',
-                      textTransform: 'capitalize'
-                    }}>
-                      {app.status || 'pending'}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Link href={`${API_URL}/${app.photo}`} target="_blank" rel="noopener noreferrer">Photo</Link><br/>
-                    <Link href={`${API_URL}/${app.id_card_1}`} target="_blank" rel="noopener noreferrer">ID 1</Link><br/>
-                    <Link href={`${API_URL}/${app.id_card_2}`} target="_blank" rel="noopener noreferrer">ID 2</Link><br/>
-                    {app.status !== 'accepted' && (
-                      <Button variant="contained" color="success" size="small" sx={{ m: 0.5 }} onClick={() => updateStatus(app.id, 'accepted')}>Accept</Button>
-                    )}
-                    {app.status !== 'declined' && (
-                      <Button variant="contained" color="error" size="small" sx={{ m: 0.5 }} onClick={() => updateStatus(app.id, 'declined')}>Decline</Button>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+      
+      {loading ? (
+        <CircularProgress sx={{ display: 'block', mx: 'auto', my: 4 }} />
+      ) : filteredApplications.length === 0 ? (
+        <Typography variant="body1" align="center" sx={{ my: 4 }}>
+          {filter === 'all' ? 
+            'No applications found.' : 
+            `No ${filter} applications found.`}
+        </Typography>
+      ) : (
+        <div className="applications-list">
+          {filteredApplications.map(application => (
+            <ApplicationCard 
+              key={application.id} 
+              application={application}
+              onStatusChange={handleStatusChange}
+              API_URL={API_URL}
+            />
+          ))}
+        </div>
       )}
     </Container>
   );
