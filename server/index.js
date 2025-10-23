@@ -4,6 +4,7 @@ const cors = require('cors');
 const multer = require('multer');
 const { Pool } = require('pg');
 const path = require('path');
+const fs = require('fs');
 const nodemailer = require('nodemailer');
 const XLSX = require('xlsx');
 
@@ -18,44 +19,22 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
-// Initialize database table
-// REMOVE the db.serialize block:
-pool.query(`
-  CREATE TABLE IF NOT EXISTS applications (
-    id SERIAL PRIMARY KEY,
-    year TEXT,
-    id_number TEXT,
-    gender TEXT,
-    ethnicity TEXT,
-    home_language TEXT,
-    full_names TEXT,
-    student_number TEXT,
-    institution TEXT,
-    email TEXT,
-    phone TEXT,
-    home_address TEXT,
-    guardian_name TEXT,
-    guardian_relationship TEXT,
-    guardian_phone TEXT,
-    guardian_email TEXT,
-    photo TEXT,
-    id_card_1 TEXT,
-    id_card_2 TEXT,
-    acceptance_letter TEXT,
-    status TEXT DEFAULT 'pending',
-    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  )
-`, (err) => {
-  if (err) {
-    console.error('Error creating table:', err);
-  } else {
-    console.log('Database table initialized successfully');
-  }
-});
+// Initialize uploads directory
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 // Multer setup for file uploads
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname),
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+  }
 });
 
 const fileFilter = (req, file, cb) => {
@@ -71,7 +50,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({ 
+const upload = multer({
   storage,
   fileFilter,
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB max file size
@@ -281,62 +260,66 @@ app.post('/api/apply', upload.fields([
   { name: 'id_card_2', maxCount: 1 },
   { name: 'acceptance_letter', maxCount: 1 }
 ]), (req, res) => {
-  const {
-    year,
-    id_number,
-    gender,
-    ethnicity,
-    home_language,
-    full_names,
-    student_number,
-    institution,
-    email,
-    phone,
-    home_address,
-    guardian_name,
-    guardian_relationship,
-    guardian_phone,
-    guardian_email
-  } = req.body;
+  console.log('Application submission received');
+  console.log('Body:', req.body);
+  console.log('Files:', req.files);
 
-  // File paths
-  const photo = req.files['photo'] ? req.files['photo'][0].path : null;
-  const id_card_1 = req.files['id_card_1'] ? req.files['id_card_1'][0].path : null;
-  const id_card_2 = req.files['id_card_2'] ? req.files['id_card_2'][0].path : null;
-  const acceptance_letter = req.files['acceptance_letter'] ? req.files['acceptance_letter'][0].path : null;
+  try {
+    const {
+      year, id_number, gender, ethnicity, home_language, full_names,
+      student_number, institution, email, phone, home_address,
+      guardian_name, guardian_relationship, guardian_phone, guardian_email
+    } = req.body;
 
-  // Insert into PostgreSQL - changed from SQLite
-  pool.query(`
-    INSERT INTO applications (
-      year, id_number, gender, ethnicity, home_language, full_names, 
-      student_number, institution, email, phone, home_address, 
-      guardian_name, guardian_relationship, guardian_phone, guardian_email, 
+    // File paths - use relative paths for database storage
+    const photo = req.files['photo'] ? 'uploads/' + path.basename(req.files['photo'][0].path) : null;
+    const id_card_1 = req.files['id_card_1'] ? 'uploads/' + path.basename(req.files['id_card_1'][0].path) : null;
+    const id_card_2 = req.files['id_card_2'] ? 'uploads/' + path.basename(req.files['id_card_2'][0].path) : null;
+    const acceptance_letter = req.files['acceptance_letter'] ? 'uploads/' + path.basename(req.files['acceptance_letter'][0].path) : null;
+
+    console.log('Processing files complete');
+    console.log('Photo:', photo);
+    console.log('ID Card 1:', id_card_1);
+    console.log('ID Card 2:', id_card_2);
+    console.log('Acceptance Letter:', acceptance_letter);
+
+    // Insert into PostgreSQL with acceptance_letter
+    pool.query(`
+      INSERT INTO applications (
+        year, id_number, gender, ethnicity, home_language, full_names, 
+        student_number, institution, email, phone, home_address, 
+        guardian_name, guardian_relationship, guardian_phone, guardian_email, 
+        photo, id_card_1, id_card_2, acceptance_letter
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+      RETURNING id
+    `, [
+      year, id_number, gender, ethnicity, home_language, full_names,
+      student_number, institution, email, phone, home_address,
+      guardian_name, guardian_relationship, guardian_phone, guardian_email,
       photo, id_card_1, id_card_2, acceptance_letter
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
-    RETURNING id
-  `, [
-    year, id_number, gender, ethnicity, home_language, full_names,
-    student_number, institution, email, phone, home_address,
-    guardian_name, guardian_relationship, guardian_phone, guardian_email,
-    photo, id_card_1, id_card_2, acceptance_letter
-  ], (err, result) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Failed to submit application' });
-    }
-    
-    // Get the inserted record ID
-    const insertedId = result.rows[0].id;
-    
-    // Email notification code remains the same
-    // ...
-    
-    res.json({ 
-      success: true, 
-      id: insertedId, // Changed from this.lastID to insertedId
-      message: 'Application submitted successfully' 
+    ], (err, result) => {
+      if (err) {
+        console.error('Database error details:', err.message);
+        console.error('Error code:', err.code);
+        console.error('Full error:', err);
+        return res.status(500).json({ error: 'Failed to submit application', details: err.message });
+      }
+      
+      console.log('Application saved successfully with ID:', result.rows[0].id);
+      
+      // Send email notifications...
+      // (Your existing email code)
+      
+      res.json({ 
+        success: true, 
+        id: result.rows[0].id,
+        message: 'Application submitted successfully' 
+      });
     });
-  });
+  } catch (error) {
+    console.error('Exception in application processing:', error);
+    res.status(500).json({ error: 'Failed to process application', details: error.message });
+  }
 });
 
 // Export to Excel
@@ -396,7 +379,7 @@ app.get('/api/export/excel', (req, res) => {
 });
 
 // Serve uploaded files
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.listen(port, () => {
   console.log(`Server running on port ${port} with PostgreSQL database`);

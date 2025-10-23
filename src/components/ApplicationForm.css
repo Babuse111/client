@@ -1,0 +1,162 @@
+.application-form-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #2196F3;
+  margin-bottom: 30px;
+}
+
+.form-section {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.form-section h3 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #333;
+  border-bottom: 2px solid #2196F3;
+  padding-bottom: 5px;
+  display: inline-block;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -10px;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 250px;
+  padding: 0 10px;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.file-upload-row {
+  margin-bottom: 0;
+}
+
+.file-upload {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-upload input[type="file"] {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px dashed #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.file-preview {
+  max-width: 200px;
+  max-height: 150px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.file-preview img {
+  max-width: 100%;
+  height: auto;
+}
+
+.document-preview {
+  font-size: 14px;
+  padding: 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.submit-button {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #0d8bf2;
+}
+
+.submit-button:disabled {
+  background-color: #9e9e9e;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.documents-info {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.success-container {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.success-container h2 {
+  color: #4CAF50;
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .form-group {
+    flex: 100%;
+  }
+}
